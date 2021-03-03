@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bullhorn.CommandLine", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AC64CBDA-BC89-415B-AFD2-E6794F72D43E}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet-nuget.yml = .github\workflows\dotnet-nuget.yml
+		.github\workflows\dotnet-nuget3.1.yml = .github\workflows\dotnet-nuget3.1.yml
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		.github\workflows\dotnet3.1.yml = .github\workflows\dotnet3.1.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
