@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Bullhorn.CommandLine": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
