@@ -8,10 +8,7 @@ namespace CodeCapital.Bullhorn.Api
     {
         private readonly BullhornApi _bullhornApi;
 
-        public ClientCorporationApi(BullhornApi bullhornApi)
-        {
-            _bullhornApi = bullhornApi;
-        }
+        public ClientCorporationApi(BullhornApi bullhornApi) => _bullhornApi = bullhornApi;
 
         public async Task<List<ClientCorporationDto>> GetNewClientCorporationsAsync(long timestampFrom)
         {
