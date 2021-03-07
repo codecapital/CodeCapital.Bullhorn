@@ -1,11 +1,10 @@
-﻿using CodeCapital.Bullhorn.Dtos;
+using CodeCapital.Bullhorn.Dtos;
 using CodeCapital.Bullhorn.Extensions;
 using CodeCapital.Bullhorn.Helpers;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -70,8 +69,7 @@ namespace CodeCapital.Bullhorn.Api
                 ClientSecret = _settings.Secret,
                 UserName = _settings.UserName,
                 Password = _settings.Password,
-                Parameters = new Dictionary<string, string>
-                {
+                Parameters = {
                     {"response_type", "code" },
                     {"action", "Login" },
                     {"state", "ips" }
@@ -103,10 +101,7 @@ namespace CodeCapital.Bullhorn.Api
                 ClientId = _settings.ClientId,
                 ClientSecret = _settings.Secret,
                 GrantType = "authorization_code",
-                Parameters = new Dictionary<string, string>
-                {
-                    {"code", authorisationCode},
-                }
+                Parameters = { { "code", authorisationCode } }
             });
         }
 
