@@ -13,6 +13,7 @@ This library is still in development but it is already used across some live pro
 - main - NET 5
 - v3.1 - .NET Core 3.1
 
-
+## ToDo
+- #3 Remove Newtonsoft.Json dependensies 
 
 
