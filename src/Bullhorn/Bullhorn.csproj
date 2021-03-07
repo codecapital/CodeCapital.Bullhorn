@@ -10,8 +10,8 @@
     <Company>Code Capital</Company>
     <PackageIcon>icon-512x512.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/codecapital/CodeCapital.AspNetCore</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/codecapital/CodeCapital.AspNetCore</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/codecapital/CodeCapital.Bullhorn</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/codecapital/CodeCapital.Bullhorn</PackageProjectUrl>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <LangVersion>9.0</LangVersion>
