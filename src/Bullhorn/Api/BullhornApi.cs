@@ -2,8 +2,6 @@ using CodeCapital.Bullhorn.Dtos;
 using CodeCapital.Bullhorn.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +9,7 @@ using System.Net.Http;
 using System.Security.Authentication;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace CodeCapital.Bullhorn.Api
@@ -97,7 +96,7 @@ namespace CodeCapital.Bullhorn.Api
 
             var jsonString = await apiResponse.Content.ReadAsStringAsync();
 
-            var response = JsonConvert.DeserializeObject<DynamicEntityResponse>(jsonString);
+            var response = JsonSerializer.Deserialize<DynamicEntityResponse>(jsonString);
 
             response.Json = jsonString;
             response.RequestUri = apiResponse.RequestMessage.RequestUri.ToString();
@@ -110,6 +109,7 @@ namespace CodeCapital.Bullhorn.Api
             return response;
         }
 
+        //ToDo Test this
         public async Task<DynamicQueryResponse> ApiCallToDynamicAsync(string query, int count, int start = 0)
         {
             query = $"{query}&start={start}&count={count}&showTotalMatched=true&usev2=true";
@@ -118,7 +118,7 @@ namespace CodeCapital.Bullhorn.Api
 
             var jsonString = await apiResponse.Content.ReadAsStringAsync();
 
-            var response = JsonConvert.DeserializeObject<DynamicQueryResponse>(jsonString);
+            var response = JsonSerializer.Deserialize<DynamicQueryResponse>(jsonString);
 
             response.Json = jsonString;
             response.RequestUri = apiResponse.RequestMessage.RequestUri.ToString();
@@ -131,15 +131,15 @@ namespace CodeCapital.Bullhorn.Api
             return response;
         }
 
-        [Obsolete("Investigate if this should be removed", true)]
-        public async Task<QueryResponse> ApiQueryAsync(string query, int count, int start = 0)
-        {
-            query = $"query/{query}&start={start}&count={count}&showTotalMatched=true&usev2=true";
+        //[Obsolete("Investigate if this should be removed", true)]
+        //public async Task<QueryResponse> ApiQueryAsync(string query, int count, int start = 0)
+        //{
+        //    query = $"query/{query}&start={start}&count={count}&showTotalMatched=true&usev2=true";
 
-            var response = await ApiGetAsync(query);
+        //    var response = await ApiGetAsync(query);
 
-            return await DeserializeAsync<QueryResponse>(response);
-        }
+        //    return await DeserializeAsync<QueryResponse>(response);
+        //}
 
         public async Task<QueryResponse<T>> ApiQueryAsync<T>(string query, int count, int start = 0)
         {
@@ -150,7 +150,8 @@ namespace CodeCapital.Bullhorn.Api
             return await DeserializeAsync<QueryResponse<T>>(response);
         }
 
-        public async Task<SearchResponse<JObject>> ApiSearchAsync(string query, int count, int start = 0) => await ApiSearchAsync<JObject>(query, count, start);
+        //ToDo 
+        //public async Task<SearchResponse<JObject>> ApiSearchAsync(string query, int count, int start = 0) => await ApiSearchAsync<JObject>(query, count, start);
 
         public async Task<SearchResponse<T>> ApiSearchAsync<T>(string query, int count, int start = 0)
         {
@@ -166,12 +167,12 @@ namespace CodeCapital.Bullhorn.Api
         /// </summary>
         /// <param name="query"></param>
         /// <returns>total number</returns>
-        public async Task<int> TotalAsync(string query)
-        {
-            var response = await ApiSearchAsync(query, 1);
+        //public async Task<int> TotalAsync(string query)
+        //{
+        //    var response = await ApiSearchAsync(query, 1);
 
-            return response.Total;
-        }
+        //    return response.Total;
+        //}
 
         public async Task<HttpResponseMessage> ApiGetAsync(string query)
         {
@@ -222,29 +223,32 @@ namespace CodeCapital.Bullhorn.Api
         }
 
         public async Task UpdateAsync<T>(int id, string entityName, T updateDto) => await ApiPostAsync($"entity/{entityName}/{id}?",
-                new StringContent(JsonConvert.SerializeObject(updateDto, new JsonSerializerSettings
+                new StringContent(JsonSerializer.Serialize<T>(updateDto, new JsonSerializerOptions
                 {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore,
-                    ContractResolver = new EmptyStringResolver()
+                    AllowTrailingCommas = true,
+                    IgnoreNullValues = true,
+                    //ContractResolver = new EmptyStringResolver()
+                    DefaultIgnoreCondition = JsonIgnoreCondition.Always
                 }), Encoding.UTF8, "application/json"));
 
         public async Task MassUpdateAsync<T>(string entityName, T updateDto) => await ApiPostAsync($"massUpdate/{entityName}?",
-                new StringContent(JsonConvert.SerializeObject(updateDto, new JsonSerializerSettings
+                new StringContent(JsonSerializer.Serialize<T>(updateDto, new JsonSerializerOptions
                 {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore,
-                    ContractResolver = new EmptyStringResolver()
+                    AllowTrailingCommas = true,
+                    IgnoreNullValues = true,
+                    //ContractResolver = new EmptyStringResolver()
+                    DefaultIgnoreCondition = JsonIgnoreCondition.Always
                 }), Encoding.UTF8, "application/json"));
 
         public async Task DeleteAsync(int id, string entityName) => await ApiDeleteAsync($"entity/{entityName}/{id}?");
 
-        public List<T> MapResults<T>(IEnumerable<JObject> data)
-        {
-            var objects = data.Select(s => s.ToObject<T>()).ToList();
+        //ToDo 
+        //public List<T> MapResults<T>(IEnumerable<JObject> data)
+        //{
+        //    var objects = data.Select(s => s.ToObject<T>()).ToList();
 
-            return objects;
-        }
+        //    return objects;
+        //}
 
         public string GetQuotedString(IEnumerable<string> list) => string.Join(" OR ", list.Select(s => $"\"{s}\""));
 
@@ -259,29 +263,7 @@ namespace CodeCapital.Bullhorn.Api
         //}
 
         public Task<T> DeserializeAsync<T>(HttpResponseMessage response)
-        {
-            return response.DeserializeAsync<T>(_logger);
-
-            //try
-            //{
-            //    return await JsonSerializer.DeserializeAsync<T>(await response.Content.ReadAsStreamAsync(), _jsonSerializerOptions);
-            //}
-            //catch (Exception e)
-            //{
-            //    _logger.LogError(e, "Deserialize Error at {uri}", response.RequestMessage.RequestUri);
-            //    throw;
-            //}
-        }
-
-        //public static async Task<T> DeserializeAsync<T>(HttpResponseMessage response)
-        //{
-        //    return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync(),
-        //        new JsonSerializerSettings
-        //        {
-        //            MissingMemberHandling = MissingMemberHandling.Ignore,
-        //            NullValueHandling = NullValueHandling.Ignore
-        //        });
-        //}
+            => response.DeserializeAsync<T>(_logger);
 
         public async Task<T> EntityAsync<T>(string query)
         {

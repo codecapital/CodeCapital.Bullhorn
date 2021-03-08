@@ -1,11 +1,11 @@
-﻿using CodeCapital.Bullhorn.Dtos;
+using CodeCapital.Bullhorn.Dtos;
 using CodeCapital.Bullhorn.Helpers;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CodeCapital.Bullhorn.Api
@@ -17,7 +17,8 @@ namespace CodeCapital.Bullhorn.Api
 
         public CandidateApi(BullhornApi bullhornApi) => _bullhornApi = bullhornApi;
 
-        public async Task AddAsync(CandidateDto dto) => await _bullhornApi.ApiPutAsync("entity/Candidate", new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json"));
+        public async Task AddAsync(CandidateDto dto)
+            => await _bullhornApi.ApiPutAsync("entity/Candidate", new StringContent(JsonSerializer.Serialize(dto, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }), Encoding.UTF8, "application/json"));
 
         public async Task<CandidateDto> GetAsync(int id, string? fields = null)
         {
@@ -86,9 +87,10 @@ namespace CodeCapital.Bullhorn.Api
             //var searchResponse = JsonConvert.DeserializeObject<SearchResponse>(
             //    await response.Content.ReadAsStringAsync());
 
-            var searchResponse = await response.DeserializeAsync<SearchResponse>();
+            var searchResponse = await response.DeserializeAsync<SearchResponse2<CandidateDto>>();
 
-            return searchResponse?.Data?.FirstOrDefault()?.ToObject<CandidateDto>();
+            //https://stackoverflow.com/questions/58138793/system-text-json-jsonelement-toobject-workaround
+            return searchResponse?.Data?.FirstOrDefault();
         }
 
         public async Task<List<CandidateDto>> FindCandidateIdByEmailAsync(List<string> emails)

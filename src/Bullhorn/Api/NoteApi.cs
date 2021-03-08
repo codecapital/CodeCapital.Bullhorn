@@ -1,9 +1,9 @@
-﻿using CodeCapital.Bullhorn.Dtos;
-using Newtonsoft.Json;
+using CodeCapital.Bullhorn.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CodeCapital.Bullhorn.Api
@@ -17,7 +17,8 @@ namespace CodeCapital.Bullhorn.Api
         public NoteApi(BullhornApi bullhornApi) => _bullhornApi = bullhornApi;
 
         //ToDo Note that this might not work because camelCase needs to be setup in Newtonsoft settings
-        public async Task AddAsync(NoteDto noteDto) => await _bullhornApi.ApiPutAsync("entity/Note", new StringContent(JsonConvert.SerializeObject(noteDto), Encoding.UTF8, "application/json"));
+        public async Task AddAsync(NoteDto noteDto)
+            => await _bullhornApi.ApiPutAsync("entity/Note", new StringContent(JsonSerializer.Serialize(noteDto, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }), Encoding.UTF8, "application/json"));
 
         public async Task<List<NoteDto>> GetFromAsync(DateTime dateTime)
         {

@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CodeCapital.Bullhorn.Api
 {
     class AccessTokenResponse
     {
-        [JsonProperty(PropertyName = "access_token")]
+        [JsonPropertyName("access_token")]
         public string AccessToken { get; set; }
 
-        [JsonProperty(PropertyName = "refresh_token")]
+        [JsonPropertyName("refresh_token")]
         public string RefreshToken { get; set; }
 
         public AccessTokenResponse(string accessToken, string refreshToken)

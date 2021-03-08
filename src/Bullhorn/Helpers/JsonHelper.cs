@@ -1,6 +1,5 @@
 using CodeCapital.Bullhorn.Extensions;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace CodeCapital.Bullhorn.Helpers
 {
+    //https://stackoverflow.com/questions/58512542/read-a-json-file-and-generate-string-keys-with-values-in-a-dictionary-like-objec
+    //https://stackoverflow.com/questions/7394551/c-sharp-flattening-json-structure
     public static class JsonHelper
     {
         private static readonly string[] FlatEntities = { "candidate", "candidateReference", "personReference", "clientContact", "clientContactReference", "clientCorporation", "jobOrder", "placement", "jobSubmission", "owner", "user", "source", "editHistory" };
@@ -26,6 +27,7 @@ namespace CodeCapital.Bullhorn.Helpers
 
         public static List<dynamic> DeserializeAndFlatten(string json)
         {
+            //https://stackoverflow.com/questions/62429809/is-there-a-more-elegant-way-to-get-specific-value-from-json-object-using-system
             var token = JToken.Parse(json);
 
             dynamic dynamicObject = ConvertJTokenToObject(token.SelectToken("data"));
