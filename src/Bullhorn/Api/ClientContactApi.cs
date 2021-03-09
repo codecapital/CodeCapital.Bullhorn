@@ -1,8 +1,6 @@
-﻿using CodeCapital.Bullhorn.Dtos;
-using CodeCapital.Bullhorn.Helpers;
+using CodeCapital.Bullhorn.Dtos;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CodeCapital.Bullhorn.Api
@@ -96,19 +94,20 @@ namespace CodeCapital.Bullhorn.Api
         //    return clientContact;
         //}
 
-        public async Task<ClientContactDto?> FindClientContactIdByEmailAsync(string email)
-        {
-            var query = $"search/ClientContact?fields=id,firstName,lastName&query=email:({email}) AND isDeleted:0";
+        //ToDo check ToObject
+        //public async Task<ClientContactDto?> FindClientContactIdByEmailAsync(string email)
+        //{
+        //    var query = $"search/ClientContact?fields=id,firstName,lastName&query=email:({email}) AND isDeleted:0";
 
-            var response = await _bullhornApi.ApiGetAsync(query);
+        //    var response = await _bullhornApi.ApiGetAsync(query);
 
-            //var searchResponse = JsonConvert.DeserializeObject<SearchResponse>(
-            //    await response.Content.ReadAsStringAsync());
+        //    //var searchResponse = JsonConvert.DeserializeObject<SearchResponse>(
+        //    //    await response.Content.ReadAsStringAsync());
 
-            var searchResponse = await response.DeserializeAsync<SearchResponse>();
+        //    var searchResponse = await response.DeserializeAsync<SearchResponse>();
 
-            return searchResponse?.Data?.FirstOrDefault()?.ToObject<ClientContactDto>();
-        }
+        //    return searchResponse?.Data?.FirstOrDefault()?.ToObject<ClientContactDto>();
+        //}
 
         public async Task<List<ClientContactDto>> FindClientContactIdByEmailAsync(List<string> emails)
         {

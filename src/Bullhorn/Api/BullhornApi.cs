@@ -24,7 +24,7 @@ namespace CodeCapital.Bullhorn.Api
         private readonly ApiSession _session;
         private readonly ILogger<BullhornApi> _logger;
         private readonly TimeSpan _defaultTimeout = TimeSpan.FromMinutes(5);
-        private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
+        private readonly JsonSerializerOptions _jsonSerializerOptions = new()
         {
             AllowTrailingCommas = true,
             IgnoreNullValues = true,
@@ -88,48 +88,48 @@ namespace CodeCapital.Bullhorn.Api
         //    return await response.Content.ReadAsAsync<DynamicQueryResponse>();
         //}
 
-        public async Task<DynamicEntityResponse> GetEntityAsync(string query)
-        {
-            query = $"{query}&showTotalMatched=true&usev2=true";
+        //public async Task<DynamicEntityResponse> GetEntityAsync(string query)
+        //{
+        //    query = $"{query}&showTotalMatched=true&usev2=true";
 
-            var apiResponse = await ApiGetAsync(query);
+        //    var apiResponse = await ApiGetAsync(query);
 
-            var jsonString = await apiResponse.Content.ReadAsStringAsync();
+        //    var jsonString = await apiResponse.Content.ReadAsStringAsync();
 
-            var response = JsonSerializer.Deserialize<DynamicEntityResponse>(jsonString);
+        //    var response = JsonSerializer.Deserialize<DynamicEntityResponse>(jsonString);
 
-            response.Json = jsonString;
-            response.RequestUri = apiResponse.RequestMessage.RequestUri.ToString();
+        //    response.Json = jsonString;
+        //    response.RequestUri = apiResponse.RequestMessage.RequestUri.ToString();
 
-            if (string.IsNullOrWhiteSpace(response.ErrorMessage))
-            {
-                response.DynamicData = JsonHelper.DeserializeAndFlatten(jsonString);
-            }
+        //    if (string.IsNullOrWhiteSpace(response.ErrorMessage))
+        //    {
+        //        response.DynamicData = JsonHelper.DeserializeAndFlatten(jsonString);
+        //    }
 
-            return response;
-        }
+        //    return response;
+        //}
 
-        //ToDo Test this
-        public async Task<DynamicQueryResponse> ApiCallToDynamicAsync(string query, int count, int start = 0)
-        {
-            query = $"{query}&start={start}&count={count}&showTotalMatched=true&usev2=true";
+        ////ToDo Test this
+        //public async Task<DynamicQueryResponse> ApiCallToDynamicAsync(string query, int count, int start = 0)
+        //{
+        //    query = $"{query}&start={start}&count={count}&showTotalMatched=true&usev2=true";
 
-            var apiResponse = await ApiGetAsync(query);
+        //    var apiResponse = await ApiGetAsync(query);
 
-            var jsonString = await apiResponse.Content.ReadAsStringAsync();
+        //    var jsonString = await apiResponse.Content.ReadAsStringAsync();
 
-            var response = JsonSerializer.Deserialize<DynamicQueryResponse>(jsonString);
+        //    var response = JsonSerializer.Deserialize<DynamicQueryResponse>(jsonString);
 
-            response.Json = jsonString;
-            response.RequestUri = apiResponse.RequestMessage.RequestUri.ToString();
+        //    response.Json = jsonString;
+        //    response.RequestUri = apiResponse.RequestMessage.RequestUri.ToString();
 
-            if (string.IsNullOrWhiteSpace(response.ErrorMessage))
-            {
-                response.DynamicData = JsonHelper.DeserializeAndFlatten(jsonString);
-            }
+        //    if (string.IsNullOrWhiteSpace(response.ErrorMessage))
+        //    {
+        //        response.DynamicData = JsonHelper.DeserializeAndFlatten(jsonString);
+        //    }
 
-            return response;
-        }
+        //    return response;
+        //}
 
         //[Obsolete("Investigate if this should be removed", true)]
         //public async Task<QueryResponse> ApiQueryAsync(string query, int count, int start = 0)
@@ -262,7 +262,7 @@ namespace CodeCapital.Bullhorn.Api
         //    return data;
         //}
 
-        public Task<T> DeserializeAsync<T>(HttpResponseMessage response)
+        public Task<T?> DeserializeAsync<T>(HttpResponseMessage response)
             => response.DeserializeAsync<T>(_logger);
 
         public async Task<T> EntityAsync<T>(string query)

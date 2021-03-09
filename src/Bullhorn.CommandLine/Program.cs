@@ -1,4 +1,4 @@
-﻿using Bullhorn.CommandLine.Services;
+using Bullhorn.CommandLine.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 
@@ -18,7 +18,11 @@ namespace Bullhorn.CommandLine
 
             var service = serviceProvider.GetService<PlayGroundService>();
 
-            await service.TestApiAsync();
+            if (service == null) return;
+
+            service.TestJson();
+
+            //await service.TestApiAsync();
         }
     }
 }
