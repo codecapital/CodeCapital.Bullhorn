@@ -1,6 +1,5 @@
 using CodeCapital.Bullhorn.Api;
 using CodeCapital.Bullhorn.Dtos;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -42,7 +41,8 @@ namespace Bullhorn.CommandLine.Services
             var people = new List<Person>
             {
                 new Person("Vaso", 20, "Bethlehem House", true),
-                new Person("John", 80, "Cable Street", false)
+                new Person("John", 80, "Cable Street", false),
+                new Person("Andy", 24, null, false)
             };
 
             var helper = new JsonHelper();
@@ -64,13 +64,14 @@ namespace Bullhorn.CommandLine.Services
     {
         public string? Name { get; set; }
         public int Age { get; set; }
-        public Address MyAddress { get; set; }
+        public Address? MyAddress { get; set; }
 
         public Person(string? name, int age, string? street, bool isLocal)
         {
             Name = name;
             Age = age;
-            MyAddress = new Address(street, isLocal);
+
+            if (street != null) MyAddress = new Address(street, isLocal);
         }
 
         public class Address
@@ -88,9 +89,15 @@ namespace Bullhorn.CommandLine.Services
 
     public class JsonHelper
     {
-        private readonly Stack<string> _context = new Stack<string>();
+        private readonly Stack<string> _context = new();
         private string _currentPath = null!;
-        private List<dynamic> _data = new();
+        private readonly List<dynamic> _data = new();
+        private ExpandoObject? _expandoObject = null;
+
+        /// <summary>
+        /// The delimiter ":" used to separate individual keys in a path.
+        /// </summary>
+        public static readonly string KeyDelimiter = ".";
 
         public List<dynamic> Flatten(string json)
         {
@@ -112,22 +119,22 @@ namespace Bullhorn.CommandLine.Services
             return _data;
         }
 
-        private void VisitElement(JsonElement element, ExpandoObject? o = null)
+        private void VisitElement(JsonElement element)
         {
             foreach (var property in element.EnumerateObject())
             {
                 EnterContext(property.Name);
-                VisitValue(property.Value, o);
+                VisitValue(property.Value);
                 ExitContext();
             }
         }
 
-        private void VisitValue(JsonElement value, ExpandoObject? o = null)
+        private void VisitValue(JsonElement value)
         {
             switch (value.ValueKind)
             {
                 case JsonValueKind.Object:
-                    VisitElement(value, o);
+                    VisitElement(value);
                     break;
 
                 case JsonValueKind.Array:
@@ -135,13 +142,15 @@ namespace Bullhorn.CommandLine.Services
 
                     foreach (var arrayElement in value.EnumerateArray())
                     {
-                        var expandoObject = new ExpandoObject();
+                        //var expandoObject = new ExpandoObject();
+                        _expandoObject = new ExpandoObject();
 
                         //EnterContext(index.ToString());
-                        VisitValue(arrayElement, expandoObject);
+                        VisitValue(arrayElement);
                         //ExitContext();
 
-                        _data.Add(expandoObject);
+                        //if (_expandoObject is not null) _data.Add(_expandoObject);
+                        _data.Add(_expandoObject);
 
                         index++;
                     }
@@ -151,11 +160,8 @@ namespace Bullhorn.CommandLine.Services
                 case JsonValueKind.String:
                 case JsonValueKind.True:
                 case JsonValueKind.False:
-                case JsonValueKind.Null:
-
                     var key = _currentPath;
-
-                    (o as IDictionary<string, object>)?.Add(key, value);
+                    AddJsonValue(key, value);
 
                     //if (_data.ContainsKey(key))
                     //{
@@ -165,22 +171,40 @@ namespace Bullhorn.CommandLine.Services
                     //_data[key] = value.ToString();
 
                     break;
+                case JsonValueKind.Null:
+                    AddNullValue(_currentPath);
+                    break;
 
                 default:
                     throw new FormatException($"Unsupported JSON token '{value.ValueKind}' was found.");
             }
         }
 
+        private void AddJsonValue(string key, JsonElement value)
+            => (_expandoObject as IDictionary<string, object>)?.Add(key, value);
+
+        private void AddNullValue(string key)
+            => (_expandoObject as IDictionary<string, object>)?.Add(key, "NULL");
+
         private void EnterContext(string context)
         {
             _context.Push(context);
-            _currentPath = ConfigurationPath.Combine(_context.Reverse());
+            _currentPath = Combine(_context.Reverse());
         }
 
         private void ExitContext()
         {
             _context.Pop();
-            _currentPath = ConfigurationPath.Combine(_context.Reverse());
+            _currentPath = Combine(_context.Reverse());
+        }
+
+        private static string Combine(IEnumerable<string> pathSegments)
+        {
+            if (pathSegments == null)
+            {
+                throw new ArgumentNullException(nameof(pathSegments));
+            }
+            return string.Join(KeyDelimiter, pathSegments);
         }
     }
 }
