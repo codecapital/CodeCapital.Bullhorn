@@ -40,9 +40,10 @@ namespace Bullhorn.CommandLine.Services
         {
             var people = new List<Person>
             {
-                new Person("Vaso", 20, "Bethlehem House", true),
-                new Person("John", 80, "Cable Street", false),
-                new Person("Andy", 24, null, false)
+                new Person("Vaso", 20, "Bethlehem House", true, null),
+                new Person("John", 80, "Cable Street", false, "Email"),
+                new Person("Andy", 24, null, false, "Email"),
+                new Person(null, 15, "Cable Street", true, null),
             };
 
             var helper = new JsonHelper();
@@ -66,46 +67,63 @@ namespace Bullhorn.CommandLine.Services
         public int Age { get; set; }
         public Address? MyAddress { get; set; }
 
-        public Person(string? name, int age, string? street, bool isLocal)
+        public Person(string? name, int age, string? street, bool isLocal, string? deliveryType)
         {
             Name = name;
             Age = age;
 
-            if (street != null) MyAddress = new Address(street, isLocal);
+            if (street != null) MyAddress = new Address(street, isLocal, deliveryType);
         }
 
         public class Address
         {
             public string? Street { get; set; }
             public bool IsLocal { get; set; }
+            public Delivery Delivery { get; set; }
 
-            public Address(string? street, bool isLocal)
+            public Address(string? street, bool isLocal, string? deliveryType)
             {
                 Street = street;
                 IsLocal = isLocal;
+                Delivery = new Delivery(deliveryType);
+            }
+        }
+
+        public class Delivery
+        {
+            public string Type { get; set; } = "Post";
+
+            public Delivery(string? type)
+            {
+                if (type != null) Type = type;
             }
         }
     }
 
     public class JsonHelper
     {
-        private readonly Stack<string> _context = new();
-        private string _currentPath = null!;
         private readonly List<dynamic> _data = new();
+        private readonly Stack<string> _context = new();
         private ExpandoObject? _expandoObject = null;
+        private string _currentPath = null!;
+        private int _nestingLevel = 0;
+        private int _maxDepth = 0;
 
         /// <summary>
         /// The delimiter ":" used to separate individual keys in a path.
         /// </summary>
         public static readonly string KeyDelimiter = ".";
 
-        public List<dynamic> Flatten(string json)
+        public List<dynamic> Flatten(string json, int maxDepth = 2)
         {
             var jsonDocumentOptions = new JsonDocumentOptions
             {
                 CommentHandling = JsonCommentHandling.Skip,
+
                 AllowTrailingCommas = true,
             };
+
+            _maxDepth = maxDepth + 1; // because of root
 
             using var doc = JsonDocument.Parse(json, jsonDocumentOptions);
 
@@ -121,12 +139,16 @@ namespace Bullhorn.CommandLine.Services
 
         private void VisitElement(JsonElement element)
         {
+            _nestingLevel++;
+
             foreach (var property in element.EnumerateObject())
             {
                 EnterContext(property.Name);
                 VisitValue(property.Value);
                 ExitContext();
             }
+
+            _nestingLevel--;
         }
 
         private void VisitValue(JsonElement value)
@@ -134,7 +156,10 @@ namespace Bullhorn.CommandLine.Services
             switch (value.ValueKind)
             {
                 case JsonValueKind.Object:
-                    VisitElement(value);
+                    if (_nestingLevel >= _maxDepth)
+                        AddJsonValue(_currentPath, value);
+                    else
+                        VisitElement(value);
                     break;
 
                 case JsonValueKind.Array:
@@ -142,14 +167,12 @@ namespace Bullhorn.CommandLine.Services
 
                     foreach (var arrayElement in value.EnumerateArray())
                     {
-                        //var expandoObject = new ExpandoObject();
                         _expandoObject = new ExpandoObject();
 
                         //EnterContext(index.ToString());
                         VisitValue(arrayElement);
                         //ExitContext();
 
-                        //if (_expandoObject is not null) _data.Add(_expandoObject);
                         _data.Add(_expandoObject);
 
                         index++;
