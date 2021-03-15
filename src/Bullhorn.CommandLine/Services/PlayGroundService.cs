@@ -48,7 +48,7 @@ namespace Bullhorn.CommandLine.Services
 
             var helper = new JsonHelper();
 
-            var result1 = helper.Flatten(JsonSerializer.Serialize(people), 2, true);
+            var result1 = helper.Flatten(JsonSerializer.Serialize(people), 5, false);
             var result2 = helper.Flatten(JsonSerializer.Serialize(new { Humans = people }), 2);
         }
 
@@ -137,14 +137,20 @@ namespace Bullhorn.CommandLine.Services
 
                 case JsonValueKind.Array:
 
-                    foreach (var arrayElement in value.EnumerateArray())
+                    if (_expandoObject == null)
                     {
-                        _expandoObject = new ExpandoObject();
-
-                        VisitValue(arrayElement);
-
-                        _data.Add(_expandoObject);
+                        foreach (var arrayElement in value.EnumerateArray())
+                        {
+                            CreateExpando();
+                            VisitValue(arrayElement);
+                            ProcessExpando();
+                        }
                     }
+                    else
+                    {
+                        AddJsonValue(_currentPath, value);
+                    }
+
                     break;
 
                 case JsonValueKind.Number:
@@ -169,10 +175,23 @@ namespace Bullhorn.CommandLine.Services
             DecreaseNesting();
         }
 
+        private void CreateExpando() => _expandoObject = new ExpandoObject();
+
+        private void ProcessExpando()
+        {
+            if (_expandoObject == null) return;
+
+            _data.Add(_expandoObject);
+
+            _expandoObject = null;
+        }
+
         private void AddJsonValue(string key, JsonElement value)
         {
             if (_removeIntended && value.ValueKind is JsonValueKind.Object)
                 AddKeyValue(key, RemoveIndentation(value));
+            else if (value.ValueKind is JsonValueKind.Array)
+                AddKeyValue(key, value.ToString() ?? "");
             else
                 AddKeyValue(key, value);
 
@@ -208,6 +227,7 @@ namespace Bullhorn.CommandLine.Services
         }
 
         private void IncreaseNesting() => _nestingLevel++;
+
         private void DecreaseNesting() => _nestingLevel--;
     }
 
@@ -216,6 +236,7 @@ namespace Bullhorn.CommandLine.Services
         public string? Name { get; set; }
         public int Age { get; set; }
         public Address? MyAddress { get; set; }
+        public List<string> Colours { get; set; } = new() { "Red", "Blue" };
 
         public Person(string? name, int age, string? street, bool isLocal, string? deliveryType)
         {
@@ -242,6 +263,8 @@ namespace Bullhorn.CommandLine.Services
         public class Delivery
         {
             public string Type { get; set; } = "Post";
+
+            public int[] Numbers { get; set; } = new[] { 1, 2, 3 };
 
             public Delivery(string? type)
             {
