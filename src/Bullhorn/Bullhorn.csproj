@@ -20,6 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CodeCapital.System.Text.Json" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
@@ -28,10 +29,6 @@
     <!--<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />-->
     <PackageReference Include="IdentityModel" Version="5.0.1" />
     <PackageReference Include="System.Text.Json" Version="5.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\AspNetCoreGithub\src\CodeCapital.System.Text.Json\CodeCapital.System.Text.Json.csproj" />
   </ItemGroup>
 
 </Project>

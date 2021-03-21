@@ -36,7 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\AspNetCoreGithub\src\CodeCapital.System.Text.Json\CodeCapital.System.Text.Json.csproj" />
     <ProjectReference Include="..\Bullhorn\Bullhorn.csproj" />
   </ItemGroup>
 
