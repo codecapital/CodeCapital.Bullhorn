@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CodeCapital.Bullhorn.Dtos
 {
@@ -10,7 +10,7 @@ namespace CodeCapital.Bullhorn.Dtos
         public string? Name { get; set; }
         public bool IsDeleted { get; set; }
 
-        [JsonProperty("_subtype")]
+        [JsonPropertyName("_subtype")]
         public string? Subtype { get; set; }
 
         public DepartmentsDto Departments { get; set; } = new DepartmentsDto();

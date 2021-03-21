@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CodeCapital.Bullhorn.Dtos
 {
@@ -12,7 +12,7 @@ namespace CodeCapital.Bullhorn.Dtos
         public string? CountryName { get; set; }
         public string? CountryCode { get; set; }
 
-        [JsonProperty("countryID")]
+        [JsonPropertyName("countryID")]
         public int? CountryId { get; set; }
     }
 }

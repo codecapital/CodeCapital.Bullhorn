@@ -1,4 +1,4 @@
-﻿using CodeCapital.Bullhorn.Dtos;
+using CodeCapital.Bullhorn.Dtos;
 using CodeCapital.Bullhorn.Helpers;
 using System;
 using System.Net.Http;
@@ -20,7 +20,7 @@ namespace CodeCapital.Bullhorn.Api
         /// <param name="entityNames">Comma separated entities e.g. "Candidate,ClientContact"</param>
         /// <param name="eventTypes">Comma separated events e.g. "inserted,updated,deleted"</param>
         /// <returns></returns>
-        public async Task<EventSubscribeDto> SubscribeAsync(string subscriptionId, string entityNames, string eventTypes)
+        public async Task<EventSubscribeDto?> SubscribeAsync(string subscriptionId, string entityNames, string eventTypes)
         {
             if (string.IsNullOrWhiteSpace(subscriptionId)) throw new ArgumentException(nameof(subscriptionId));
 
@@ -39,12 +39,12 @@ namespace CodeCapital.Bullhorn.Api
         {
             var unsubscribed = await UnSubscribeAsync(subscriptionId);
 
-            if (unsubscribed.Result) return await SubscribeAsync(subscriptionId, entityNames, eventTypes);
+            if (unsubscribed != null && unsubscribed.Result) return await SubscribeAsync(subscriptionId, entityNames, eventTypes);
 
             return null;
         }
 
-        public async Task<EventUnSubscribeDto> UnSubscribeAsync(string subscriptionId)
+        public async Task<EventUnSubscribeDto?> UnSubscribeAsync(string subscriptionId)
         {
             if (string.IsNullOrWhiteSpace(subscriptionId)) throw new ArgumentException(nameof(subscriptionId));
 
@@ -60,7 +60,7 @@ namespace CodeCapital.Bullhorn.Api
         /// </summary>
         /// <param name="subscriptionId"></param>
         /// <returns></returns>
-        public async Task<EventsDto> GetAsync(string subscriptionId)
+        public async Task<EventsDto?> GetAsync(string subscriptionId)
         {
             var query = $"event/subscription/{subscriptionId}?maxEvents=100";
 

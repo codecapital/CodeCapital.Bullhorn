@@ -1,4 +1,4 @@
-﻿using CodeCapital.Bullhorn.Api;
+using CodeCapital.Bullhorn.Api;
 using CodeCapital.Bullhorn.Dtos;
 using Microsoft.Extensions.Logging;
 using System;

@@ -1,6 +1,6 @@
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 using CodeCapital.Bullhorn.Dtos;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace CodeCapital.Bullhorn.Api
 {
@@ -9,6 +9,7 @@ namespace CodeCapital.Bullhorn.Api
         public int Total { get; set; }
         public int Start { get; set; }
         public int Count { get; set; }
-        public List<JObject> Data { get; set; }
+        //ToDo Json
+        public List<JsonDocument> Data { get; set; }
     }
 }
