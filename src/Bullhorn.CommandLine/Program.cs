@@ -20,9 +20,7 @@ namespace Bullhorn.CommandLine
 
             if (service == null) return;
 
-            service.TestJson();
-
-            //await service.TestApiAsync();
+            await service.TestApiAsync();
         }
     }
 }

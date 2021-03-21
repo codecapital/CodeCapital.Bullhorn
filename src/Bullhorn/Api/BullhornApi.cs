@@ -1,5 +1,6 @@
 using CodeCapital.Bullhorn.Dtos;
 using CodeCapital.Bullhorn.Helpers;
+using CodeCapital.System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -88,48 +89,52 @@ namespace CodeCapital.Bullhorn.Api
         //    return await response.Content.ReadAsAsync<DynamicQueryResponse>();
         //}
 
-        //public async Task<DynamicEntityResponse> GetEntityAsync(string query)
-        //{
-        //    query = $"{query}&showTotalMatched=true&usev2=true";
+        public async Task<DynamicEntityResponse> GetEntityAsync(string query)
+        {
+            query = $"{query}&showTotalMatched=true&usev2=true";
 
-        //    var apiResponse = await ApiGetAsync(query);
+            var apiResponse = await ApiGetAsync(query);
 
-        //    var jsonString = await apiResponse.Content.ReadAsStringAsync();
+            var jsonString = await apiResponse.Content.ReadAsStringAsync();
 
-        //    var response = JsonSerializer.Deserialize<DynamicEntityResponse>(jsonString);
+            var response = JsonSerializer.Deserialize<DynamicEntityResponse>(jsonString);
 
-        //    response.Json = jsonString;
-        //    response.RequestUri = apiResponse.RequestMessage.RequestUri.ToString();
+            response.Json = jsonString;
+            response.RequestUri = apiResponse.RequestMessage.RequestUri.ToString();
 
-        //    if (string.IsNullOrWhiteSpace(response.ErrorMessage))
-        //    {
-        //        response.DynamicData = JsonHelper.DeserializeAndFlatten(jsonString);
-        //    }
+            if (string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                var flattener = new JsonFlattener();
 
-        //    return response;
-        //}
+                response.DynamicData = flattener.Flatten(jsonString);
+            }
 
-        ////ToDo Test this
-        //public async Task<DynamicQueryResponse> ApiCallToDynamicAsync(string query, int count, int start = 0)
-        //{
-        //    query = $"{query}&start={start}&count={count}&showTotalMatched=true&usev2=true";
+            return response;
+        }
 
-        //    var apiResponse = await ApiGetAsync(query);
+        //ToDo Test this
+        public async Task<DynamicQueryResponse> ApiCallToDynamicAsync(string query, int count, int start = 0)
+        {
+            query = $"{query}&start={start}&count={count}&showTotalMatched=true&usev2=true";
 
-        //    var jsonString = await apiResponse.Content.ReadAsStringAsync();
+            var apiResponse = await ApiGetAsync(query);
 
-        //    var response = JsonSerializer.Deserialize<DynamicQueryResponse>(jsonString);
+            var jsonString = await apiResponse.Content.ReadAsStringAsync();
 
-        //    response.Json = jsonString;
-        //    response.RequestUri = apiResponse.RequestMessage.RequestUri.ToString();
+            var response = JsonSerializer.Deserialize<DynamicQueryResponse>(jsonString);
 
-        //    if (string.IsNullOrWhiteSpace(response.ErrorMessage))
-        //    {
-        //        response.DynamicData = JsonHelper.DeserializeAndFlatten(jsonString);
-        //    }
+            response.Json = jsonString;
+            response.RequestUri = apiResponse.RequestMessage.RequestUri.ToString();
 
-        //    return response;
-        //}
+            if (string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                var flattener = new JsonFlattener();
+
+                response.DynamicData = flattener.Flatten(jsonString);
+            }
+
+            return response;
+        }
 
         //[Obsolete("Investigate if this should be removed", true)]
         //public async Task<QueryResponse> ApiQueryAsync(string query, int count, int start = 0)

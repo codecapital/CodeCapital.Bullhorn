@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <Version>5.0.0</Version>
     <Description>.NET Core Bullhorn REST API integration.</Description>
@@ -28,6 +28,10 @@
     <!--<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />-->
     <PackageReference Include="IdentityModel" Version="5.0.1" />
     <PackageReference Include="System.Text.Json" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\AspNetCoreGithub\src\CodeCapital.System.Text.Json\CodeCapital.System.Text.Json.csproj" />
   </ItemGroup>
 
 </Project>
