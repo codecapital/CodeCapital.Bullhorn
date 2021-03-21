@@ -106,7 +106,7 @@ namespace CodeCapital.Bullhorn.Api
             {
                 var flattener = new JsonFlattener();
 
-                response.DynamicData = flattener.Flatten(jsonString);
+                response.DynamicData = flattener.Flatten(jsonString, new JsonSerializerFlattenOptions { KeyDelimiter = " " });
             }
 
             return response;
@@ -130,7 +130,7 @@ namespace CodeCapital.Bullhorn.Api
             {
                 var flattener = new JsonFlattener();
 
-                response.DynamicData = flattener.Flatten(jsonString);
+                response.DynamicData = flattener.Flatten(jsonString, new JsonSerializerFlattenOptions { KeyDelimiter = " " });
             }
 
             return response;
