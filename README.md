@@ -14,6 +14,12 @@ This library is still in development but it is already used across some live pro
 - v3.1 - .NET Core 3.1
 
 ## ToDo
-- #3 Remove Newtonsoft.Json dependensies 
+
+## Done
+- [#3 Remove Newtonsoft.Json dependensies](https://github.com/codecapital/CodeCapital.Bullhorn/issues/3)
+
+
+## Do you miss anything?
+- Please contact me for an urgent work, otherwise use issues section for you suggestions.
 
 
