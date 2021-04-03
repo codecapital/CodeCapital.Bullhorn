@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net5.0</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <Version>5.0.4</Version>
+    <Version>5.0.4.1</Version>
     <Description>.NET Core Bullhorn REST API integration.</Description>
     <PackageTags>aspnetcore,bullhorn</PackageTags>
     <Authors>Vaclav Elias</Authors>
