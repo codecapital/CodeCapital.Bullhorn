@@ -1,17 +1,18 @@
 using CodeCapital.Bullhorn.Api;
 using CodeCapital.Bullhorn.Dtos;
+using CodeCapital.Bullhorn.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
 namespace Bullhorn.CommandLine.Services
 {
-    public class PlayGroundService
+    public class UpdateFieldService
     {
-        private readonly ILogger<PlayGroundService> _logger;
+        private readonly ILogger<UpdateFieldService> _logger;
         private readonly BullhornApi _bullhornApi;
 
-        public PlayGroundService(ILogger<PlayGroundService> logger, BullhornApi bullhornApi)
+        public UpdateFieldService(ILogger<UpdateFieldService> logger, BullhornApi bullhornApi)
         {
             _logger = logger;
             _bullhornApi = bullhornApi;
@@ -34,7 +35,11 @@ namespace Bullhorn.CommandLine.Services
 
         private async Task GetDepartmentsAsync()
         {
-            var testUrl = "Department?fields=id,description,enabled,name&where=id>0";
+            var timestampFrom = DateTime.Now.AddDays(-1).Timestamp();
+            var timestampTo = DateTime.Now.Timestamp();
+
+            var testUrl = $"Placement?fields=id,customEncryptedText10,customText8&where=id=";
+            //var testUrl = $"Placement?fields=id,customEncryptedText10,customText8&where=dateAdded>={timestampFrom} AND dateAdded<={timestampTo}";
 
             var result = await _bullhornApi.QueryAsync<DepartmentDto>(testUrl);
 
