@@ -16,11 +16,11 @@ namespace Bullhorn.CommandLine
 
             var serviceProvider = services.BuildServiceProvider();
 
-            var service = serviceProvider.GetService<PlayGroundService>();
+            var service = serviceProvider.GetService<UpdateFieldService>();
 
             if (service == null) return;
 
-            await service.TestApiAsync();
+            await service.UpdateAsync();
         }
     }
 }

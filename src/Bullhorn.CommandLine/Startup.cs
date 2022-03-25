@@ -1,4 +1,4 @@
-﻿using Bullhorn.CommandLine.Services;
+using Bullhorn.CommandLine.Services;
 using CodeCapital.Bullhorn.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,6 +56,7 @@ namespace Bullhorn.CommandLine
             services.AddBullhorn(Configuration, "BullhornSettings:RestApi");
 
             services.AddScoped<PlayGroundService>();
+            services.AddScoped<UpdateFieldService>();
         }
     }
 }

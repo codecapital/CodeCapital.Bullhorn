@@ -1,6 +1,4 @@
 using CodeCapital.Bullhorn.Api;
-using CodeCapital.Bullhorn.Dtos;
-using CodeCapital.Bullhorn.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -18,32 +16,39 @@ namespace Bullhorn.CommandLine.Services
             _bullhornApi = bullhornApi;
         }
 
-        public async Task TestApiAsync()
+        public async Task UpdateAsync()
         {
             try
             {
                 await _bullhornApi.CheckConnectionAsync();
-                await GetDepartmentsAsync();
+
+                await UpdatePlacmentFieldAsync();
             }
             catch (Exception e)
             {
-                _logger.LogError(e, nameof(TestApiAsync));
+                _logger.LogError(e, nameof(UpdateAsync));
 
                 throw;
             }
         }
 
-        private async Task GetDepartmentsAsync()
+        private async Task UpdatePlacmentFieldAsync()
         {
-            var timestampFrom = DateTime.Now.AddDays(-1).Timestamp();
-            var timestampTo = DateTime.Now.Timestamp();
+            //var testUrl = $"Placement?fields=id,customEncryptedText10,customText8&where=id=6908";
 
-            var testUrl = $"Placement?fields=id,customEncryptedText10,customText8&where=id=";
-            //var testUrl = $"Placement?fields=id,customEncryptedText10,customText8&where=dateAdded>={timestampFrom} AND dateAdded<={timestampTo}";
+            //var result = await _bullhornApi.QueryAsync<PlacementDto>(testUrl);
 
-            var result = await _bullhornApi.QueryAsync<DepartmentDto>(testUrl);
+            // Important! Make sure you update only a field you want to update. Do not use Dtos with multiple fields which are not going to be updated because Bullhorn entity will be updated with defaults.
+            try
+            {
+                await _bullhornApi.UpdateAsync(6911, "Placement", new { customText8 = "New" });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Update UpdatePlacmentFieldAsync");
+            }
 
-            _logger.LogInformation("Items: {0}", result.Count);
+            //_logger.LogInformation("Items: {0}", result.Count);
         }
     }
 }
