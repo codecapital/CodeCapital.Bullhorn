@@ -227,13 +227,13 @@ namespace CodeCapital.Bullhorn.Api
             return await _httpClient.DeleteAsync(restUrl);
         }
 
-        public async Task UpdateAsync<T>(int id, string entityName, T updateDto) => await ApiPostAsync($"entity/{entityName}/{id}?",
+        public async Task UpdateAsync<T>(int id, string entityName, T updateDto) => await ApiPostAsync($"entity/{entityName}/{id}",
                 new StringContent(JsonSerializer.Serialize<T>(updateDto, new JsonSerializerOptions
                 {
                     AllowTrailingCommas = true,
-                    IgnoreNullValues = true,
+                    IgnoreNullValues = true
                     //ContractResolver = new EmptyStringResolver()
-                    DefaultIgnoreCondition = JsonIgnoreCondition.Always
+                    //DefaultIgnoreCondition = JsonIgnoreCondition.Always
                 }), Encoding.UTF8, "application/json"));
 
         public async Task MassUpdateAsync<T>(string entityName, T updateDto) => await ApiPostAsync($"massUpdate/{entityName}?",
