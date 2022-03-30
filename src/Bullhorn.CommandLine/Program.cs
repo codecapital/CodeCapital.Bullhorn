@@ -1,6 +1,5 @@
 using Bullhorn.CommandLine.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
 
 namespace Bullhorn.CommandLine
 {

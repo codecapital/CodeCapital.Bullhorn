@@ -4,9 +4,6 @@ using CodeCapital.Bullhorn.Helpers;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace CodeCapital.Bullhorn.Api
 {

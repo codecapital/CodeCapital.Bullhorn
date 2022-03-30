@@ -3,15 +3,10 @@ using CodeCapital.Bullhorn.Helpers;
 using CodeCapital.System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Security.Authentication;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace CodeCapital.Bullhorn.Api
 {

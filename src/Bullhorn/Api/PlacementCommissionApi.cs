@@ -1,6 +1,4 @@
-﻿using CodeCapital.Bullhorn.Dtos;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using CodeCapital.Bullhorn.Dtos;
 
 namespace CodeCapital.Bullhorn.Api
 {

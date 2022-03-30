@@ -1,7 +1,5 @@
 using CodeCapital.Bullhorn.Api;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace Bullhorn.CommandLine.Services
 {

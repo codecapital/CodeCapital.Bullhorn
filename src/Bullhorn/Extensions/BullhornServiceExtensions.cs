@@ -1,11 +1,9 @@
-﻿using CodeCapital.Bullhorn.Api;
+using CodeCapital.Bullhorn.Api;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Polly;
-using System;
-using System.Net.Http;
 
 
 namespace CodeCapital.Bullhorn.Extensions

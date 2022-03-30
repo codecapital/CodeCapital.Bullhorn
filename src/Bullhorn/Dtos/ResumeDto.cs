@@ -1,5 +1,3 @@
-﻿using System.Collections.Generic;
-
 namespace CodeCapital.Bullhorn.Dtos
 {
     public class ResumeDto

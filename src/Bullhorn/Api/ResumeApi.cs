@@ -1,8 +1,5 @@
-﻿using CodeCapital.Bullhorn.Dtos;
+using CodeCapital.Bullhorn.Dtos;
 using CodeCapital.Bullhorn.Helpers;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace CodeCapital.Bullhorn.Api
 {
