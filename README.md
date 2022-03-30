@@ -13,8 +13,8 @@ This library is still in development but it is already used across some live pro
 ## ToDo
 
 ## Done
+- [#8 Migrate to .NET 6](https://github.com/codecapital/CodeCapital.Bullhorn/issues/8)
 - [#3 Remove Newtonsoft.Json dependensies](https://github.com/codecapital/CodeCapital.Bullhorn/issues/3)
-
 
 ## Do you miss anything?
 - Please contact me for an urgent work, otherwise use issues section for you suggestions.
