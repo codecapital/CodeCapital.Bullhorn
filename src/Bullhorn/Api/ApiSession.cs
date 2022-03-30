@@ -65,14 +65,13 @@ namespace CodeCapital.Bullhorn.Api
             var response = await _client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 Address = _settings.AuthorizeUrl,
-                ClientId = _settings.ClientId,
-                ClientSecret = _settings.Secret,
                 UserName = _settings.UserName,
                 Password = _settings.Password,
                 Parameters = {
                     {"response_type", "code" },
                     {"action", "Login" },
-                    {"state", "ips" }
+                    {"state", "ips" },
+                    {"client_id", _settings.ClientId }
                 }
             });
 
@@ -98,10 +97,12 @@ namespace CodeCapital.Bullhorn.Api
             return await _client.RequestTokenAsync(new AuthorizationCodeTokenRequest
             {
                 Address = _settings.TokenUrl,
-                ClientId = _settings.ClientId,
-                ClientSecret = _settings.Secret,
                 GrantType = "authorization_code",
-                Parameters = { { "code", authorisationCode } }
+                Parameters = {
+                    { "code", authorisationCode },
+                    {"client_id", _settings.ClientId },
+                    {"client_secret", _settings.Secret }
+                }
             });
         }
 
@@ -128,7 +129,6 @@ namespace CodeCapital.Bullhorn.Api
         {
             _client.DefaultRequestHeaders.Remove("BhRestToken");
             _client.DefaultRequestHeaders.TryAddWithoutValidation("BhRestToken", token);
-            //_httpClient.DefaultRequestHeaders.Add("BhRestToken", token);
         }
 
         public async Task RefreshTokenAsync()
@@ -164,9 +164,11 @@ namespace CodeCapital.Bullhorn.Api
             await _client.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
                 Address = _settings.TokenUrl,
-                ClientId = _settings.ClientId,
-                ClientSecret = _settings.Secret,
-                RefreshToken = _refreshToken
+                RefreshToken = _refreshToken,
+                Parameters = {
+                    {"client_id", _settings.ClientId },
+                    {"client_secret", _settings.Secret }
+                }
             });
 
         private static string GetQuery(HttpResponseMessage response) =>
