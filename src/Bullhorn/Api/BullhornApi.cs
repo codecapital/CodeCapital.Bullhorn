@@ -329,9 +329,19 @@ namespace CodeCapital.Bullhorn.Api
 
             _apiCallCounter++;
 
-            using var response = await _httpClient.GetAsync($"{_session.LoginResponse!.RestUrl}/ping");
+            try
+            {
+                using var response = await _httpClient.GetAsync($"{_session.LoginResponse!.RestUrl}/ping");
 
-            _session.Ping = await DeserializeAsync<PingDto>(response);
+                _session.Ping = await DeserializeAsync<PingDto>(response);
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "PingCheckAsync");
+
+                await _session.ConnectAsync();
+            }
 
             _logger.LogDebug("Next token refresh at {0}", _session.Ping.SessionExpiryDate);
 
