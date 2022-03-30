@@ -65,13 +65,14 @@ namespace CodeCapital.Bullhorn.Api
             var response = await _client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 Address = _settings.AuthorizeUrl,
+                ClientId = _settings.ClientId,
+                ClientSecret = _settings.Secret,
                 UserName = _settings.UserName,
                 Password = _settings.Password,
                 Parameters = {
                     {"response_type", "code" },
                     {"action", "Login" },
-                    {"state", "ips" },
-                    {"client_id", _settings.ClientId }
+                    {"state", "ips" }
                 }
             });
 
@@ -97,12 +98,10 @@ namespace CodeCapital.Bullhorn.Api
             return await _client.RequestTokenAsync(new AuthorizationCodeTokenRequest
             {
                 Address = _settings.TokenUrl,
+                ClientId = _settings.ClientId,
+                ClientSecret = _settings.Secret,
                 GrantType = "authorization_code",
-                Parameters = {
-                    { "code", authorisationCode },
-                    {"client_id", _settings.ClientId },
-                    {"client_secret", _settings.Secret }
-                }
+                Parameters = { { "code", authorisationCode } }
             });
         }
 
@@ -164,11 +163,9 @@ namespace CodeCapital.Bullhorn.Api
             await _client.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
                 Address = _settings.TokenUrl,
-                RefreshToken = _refreshToken,
-                Parameters = {
-                    {"client_id", _settings.ClientId },
-                    {"client_secret", _settings.Secret }
-                }
+                ClientId = _settings.ClientId,
+                ClientSecret = _settings.Secret,
+                RefreshToken = _refreshToken
             });
 
         private static string GetQuery(HttpResponseMessage response) =>
