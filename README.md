@@ -1,6 +1,6 @@
 # CodeCapital.Bullhorn
 
-Bullhorn library 5.0.x
+Bullhorn library 6.0.x
 [![.NET Build](https://github.com/codecapital/CodeCapital.Bullhorn/actions/workflows/dotnet.yml/badge.svg)](https://github.com/codecapital/CodeCapital.Bullhorn/actions/workflows/dotnet.yml)
 
 Bullhorn library 3.1.x
@@ -10,7 +10,8 @@ Bullhorn library 3.1.x
 This library is still in development but it is already used across some live projects.
 
 ## Branches
-- main - NET 5
+- main - NET 6
+- net5.0 - .NET Core 5.0
 - v3.1 - .NET Core 3.1
 
 ## ToDo
