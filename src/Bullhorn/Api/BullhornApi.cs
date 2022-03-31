@@ -3,7 +3,6 @@ using CodeCapital.Bullhorn.Helpers;
 using CodeCapital.System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Security.Authentication;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -51,7 +50,7 @@ namespace CodeCapital.Bullhorn.Api
                 throw new NullReferenceException($"{nameof(BullhornSettings)}, Set the {nameof(BullhornSettings)} parameter before connecting!");
             }
 
-            if (_session.LoginResponse != null) return;
+            if (_session.LoginResponse != null || _session.IsValid) return;
 
             //BullhornApi.SetAuthorizationMeta(_bullhornSettings);
 
@@ -150,7 +149,7 @@ namespace CodeCapital.Bullhorn.Api
             return await DeserializeAsync<QueryResponse<T>>(response);
         }
 
-        //ToDo 
+        //ToDo
         //public async Task<SearchResponse<JObject>> ApiSearchAsync(string query, int count, int start = 0) => await ApiSearchAsync<JObject>(query, count, start);
 
         public async Task<SearchResponse<T>> ApiSearchAsync<T>(string query, int count, int start = 0)
@@ -242,7 +241,7 @@ namespace CodeCapital.Bullhorn.Api
 
         public async Task DeleteAsync(int id, string entityName) => await ApiDeleteAsync($"entity/{entityName}/{id}?");
 
-        //ToDo 
+        //ToDo
         //public List<T> MapResults<T>(IEnumerable<JObject> data)
         //{
         //    var objects = data.Select(s => s.ToObject<T>()).ToList();
@@ -316,8 +315,8 @@ namespace CodeCapital.Bullhorn.Api
 
             if (!_session.IsValid)
             {
-                _logger.LogError("Not logged in yet.");
-                throw new AuthenticationException("Not logged in yet.");
+                _logger.LogError("{0}, Not logged in yet.", nameof(PingCheckAsync));
+                //throw new AuthenticationException("Not logged in yet.");
             }
 
             if (_session.Ping?.Valid ?? false) return;
