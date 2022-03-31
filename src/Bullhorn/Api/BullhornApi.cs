@@ -50,27 +50,10 @@ namespace CodeCapital.Bullhorn.Api
                 throw new NullReferenceException($"{nameof(BullhornSettings)}, Set the {nameof(BullhornSettings)} parameter before connecting!");
             }
 
-            if (_session.LoginResponse != null || _session.IsValid) return;
-
-            //BullhornApi.SetAuthorizationMeta(_bullhornSettings);
+            if (_session.IsValid) return;
 
             await _session.ConnectAsync();
         }
-
-        //public async Task ConnectAsync(int callsRefresh = 0)
-        //{
-        //    if (_bullhornSettings == null) throw new NullReferenceException($"{nameof(BullhornSettings)}, Set the {nameof(BullhornSettings)} parameter before connecting!");
-
-        //    _logger.LogInformation("Connecting to Bullhorn");
-
-        //    _authorization = new Authorization(_bullhornSettings, _httpClient, _logger);
-        //    await _authorization.AuthorizeAsync();
-
-        //    UpdateBhRestTokenHeader();
-        //    Authorized = true;
-
-        //    _logger.LogInformation("Connected to Bullhorn");
-        //}
 
         //public async Task<DynamicQueryResponse> ApiQueryToDynamicAsync(string query, int count, int start = 0)
         //{
@@ -179,7 +162,7 @@ namespace CodeCapital.Bullhorn.Api
 
             var restUrl = $"{_session.LoginResponse!.RestUrl}{query}";
 
-            _logger.LogDebug($"Request: {restUrl}");
+            //_logger.LogDebug($"Request: {restUrl}");
 
             return await _httpClient.GetAsync(restUrl);
         }
@@ -225,16 +208,16 @@ namespace CodeCapital.Bullhorn.Api
                 new StringContent(JsonSerializer.Serialize<T>(updateDto, new JsonSerializerOptions
                 {
                     AllowTrailingCommas = true,
-                    IgnoreNullValues = true
+                    //IgnoreNullValues = true
                     //ContractResolver = new EmptyStringResolver()
-                    //DefaultIgnoreCondition = JsonIgnoreCondition.Always
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
                 }), Encoding.UTF8, "application/json"));
 
         public async Task MassUpdateAsync<T>(string entityName, T updateDto) => await ApiPostAsync($"massUpdate/{entityName}?",
                 new StringContent(JsonSerializer.Serialize<T>(updateDto, new JsonSerializerOptions
                 {
                     AllowTrailingCommas = true,
-                    IgnoreNullValues = true,
+                    //IgnoreNullValues = true,
                     //ContractResolver = new EmptyStringResolver()
                     DefaultIgnoreCondition = JsonIgnoreCondition.Always
                 }), Encoding.UTF8, "application/json"));
