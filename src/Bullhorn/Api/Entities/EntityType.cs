@@ -1,7 +1,7 @@
-﻿namespace CodeCapital.Bullhorn.Api.Entities
+namespace CodeCapital.Bullhorn.Api.Entities
 {
     public enum EntityType
     {
-        ClientCorporation, Candidate, ClientContact, JobOrder, Placement, Appointment
+        Appointment, Candidate, ClientContact, ClientCorporation, JobOrder, Placement
     }
 }
