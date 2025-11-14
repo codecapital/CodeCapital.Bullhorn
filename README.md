@@ -1,5 +1,8 @@
 # CodeCapital.Bullhorn
 
+> [!CAUTION]
+> This is now archived. This API Client continues to be developed here https://github.com/api-bureau/bullhorn-api.
+
 Bullhorn library 6.0.x
 [![.NET Build](https://github.com/codecapital/CodeCapital.Bullhorn/actions/workflows/dotnet.yml/badge.svg)](https://github.com/codecapital/CodeCapital.Bullhorn/actions/workflows/dotnet.yml)
 
